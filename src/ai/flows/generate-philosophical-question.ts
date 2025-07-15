@@ -17,7 +17,7 @@ const GeneratePhilosophicalQuestionInputSchema = z.object({
 export type GeneratePhilosophicalQuestionInput = z.infer<typeof GeneratePhilosophicalQuestionInputSchema>;
 
 const GeneratePhilosophicalQuestionOutputSchema = z.object({
-  question: z.string().describe('A philosophical question about the nature of gaming and its impact on life.'),
+  question: z.string().describe('Một câu hỏi triết học về bản chất của trò chơi và tác động của nó đối với cuộc sống.'),
 });
 export type GeneratePhilosophicalQuestionOutput = z.infer<typeof GeneratePhilosophicalQuestionOutputSchema>;
 
@@ -29,11 +29,11 @@ const prompt = ai.definePrompt({
   name: 'philosophicalQuestionPrompt',
   input: {schema: GeneratePhilosophicalQuestionInputSchema},
   output: {schema: GeneratePhilosophicalQuestionOutputSchema},
-  prompt: `As a philosophical AI, generate a thought-provoking question about gaming, tailored to the game "{{{gameName}}}". The question should challenge the player's perspective on their engagement with the game and its broader implications.
+  prompt: `Là một AI triết học, hãy tạo ra một câu hỏi sâu sắc bằng tiếng Việt về trò chơi, phù hợp với trò chơi "{{{gameName}}}". Câu hỏi nên thách thức quan điểm của người chơi về sự tương tác của họ với trò chơi và những hàm ý rộng lớn hơn của nó.
 
-Example Question: "If the points in {{{gameName}}} ceased to exist, would you still play?"
+Câu hỏi ví dụ: "Nếu điểm trong {{{gameName}}} không còn tồn tại, bạn có còn chơi không?"
 
-Question: `,
+Câu hỏi: `,
 });
 
 const generatePhilosophicalQuestionFlow = ai.defineFlow(

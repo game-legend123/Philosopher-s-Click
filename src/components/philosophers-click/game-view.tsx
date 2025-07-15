@@ -1,15 +1,18 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { BookOpen, LoaderCircle } from 'lucide-react';
+import { BookOpen, HelpCircle, LoaderCircle } from 'lucide-react';
 import { generatePhilosophicalQuestion } from '@/ai/flows/generate-philosophical-question';
 import { curatePhilosophicalQuestion } from '@/ai/flows/curate-philosophical-question';
 import { useToast } from '@/hooks/use-toast';
 import QuestionDialog from './question-dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import TutorialDialog from './tutorial-dialog';
+import { Button } from '@/components/ui/button';
 
 const QUESTION_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
 const RESPONSE_TIME_SECONDS = 60;
+const TUTORIAL_KEY = 'philosophers-click-tutorial-seen';
 
 export default function GameView() {
   const [score, setScore] = useState(0);
@@ -17,14 +20,27 @@ export default function GameView() {
   const [isAnswering, setIsAnswering] = useState(false);
   const [timeLeft, setTimeLeft] = useState(RESPONSE_TIME_SECONDS);
   const [isLoading, setIsLoading] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const { toast } = useToast();
 
   const questionTimerRef = useRef<NodeJS.Timeout | null>(null);
   const responseTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  useEffect(() => {
+    const tutorialSeen = localStorage.getItem(TUTORIAL_KEY);
+    if (!tutorialSeen) {
+      setShowTutorial(true);
+    }
+  }, []);
+
+  const handleTutorialClose = () => {
+    localStorage.setItem(TUTORIAL_KEY, 'true');
+    setShowTutorial(false);
+  };
+
   const handleReset = useCallback((message: string) => {
     toast({
-      title: 'A New Beginning',
+      title: 'Một Khởi Đầu Mới',
       description: message,
       variant: 'destructive',
       duration: 5000,
@@ -39,7 +55,7 @@ export default function GameView() {
   const generateAndAskQuestion = useCallback(async () => {
     setIsLoading(true);
     toast({
-      title: 'The cosmos is brewing a thought...',
+      title: 'Vũ trụ đang nghiền ngẫm một ý nghĩ...',
     });
     try {
       const { question: generatedQuestion } = await generatePhilosophicalQuestion({ gameName: "Philosopher's Click" });
@@ -50,16 +66,16 @@ export default function GameView() {
         setIsAnswering(true);
       } else {
         toast({
-          title: 'A Fleeting Thought',
-          description: "The generated question wasn't profound enough. The cycle continues.",
+          title: 'Một ý nghĩ thoáng qua',
+          description: "Câu hỏi được tạo ra chưa đủ sâu sắc. Vòng lặp tiếp tục.",
           variant: 'default',
         });
       }
     } catch (error) {
-      console.error("Error generating question:", error);
+      console.error("Lỗi tạo câu hỏi:", error);
       toast({
-        title: 'Cosmic Silence',
-        description: 'Could not generate a question. You are spared, for now.',
+        title: 'Sự im lặng của vũ trụ',
+        description: 'Không thể tạo câu hỏi. Bạn được tạm tha.',
         variant: 'destructive',
       });
     } finally {
@@ -102,7 +118,7 @@ export default function GameView() {
         setTimeLeft(prev => {
           if (prev <= 1) {
             clearInterval(responseTimerRef.current!);
-            handleReset("Silence is an answer. The universe resets.");
+            handleReset("Sự im lặng cũng là một câu trả lời. Vũ trụ tái thiết lập.");
             return 0;
           }
           return prev - 1;
@@ -117,12 +133,12 @@ export default function GameView() {
 
   const handleSubmitAnswer = (answer: string) => {
     if (answer.trim() === '') {
-      handleReset('An empty answer echoes in the void. The game resets.');
+      handleReset('Một câu trả lời trống rỗng vang vọng trong hư không. Trò chơi tái thiết lập.');
       return;
     }
     toast({
-      title: 'Contemplation Received',
-      description: 'Your insight is noted. The journey continues.',
+      title: 'Sự suy ngẫm đã được ghi nhận',
+      description: 'Góc nhìn của bạn đã được ghi nhận. Cuộc hành trình tiếp tục.',
       duration: 5000,
     });
     setIsAnswering(false);
@@ -132,9 +148,17 @@ export default function GameView() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background text-foreground p-4 sm:p-8">
-      <header className="absolute top-8 text-center px-4">
-        <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">Philosopher's Click</h1>
-        <p className="text-muted-foreground mt-2">Accumulate points, ponder existence.</p>
+      <header className="absolute top-4 sm:top-8 text-center px-4 w-full flex justify-between items-start">
+        <div className="flex-1"></div>
+        <div className="flex-1 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold font-headline text-primary">Philosopher's Click</h1>
+          <p className="text-muted-foreground mt-2">Tích lũy điểm, suy ngẫm về sự tồn tại.</p>
+        </div>
+        <div className="flex-1 flex justify-end">
+           <Button variant="ghost" size="icon" onClick={() => setShowTutorial(true)} aria-label="Hướng dẫn">
+             <HelpCircle className="w-6 h-6" />
+           </Button>
+        </div>
       </header>
 
       <main className="flex flex-col items-center justify-center text-center">
@@ -142,7 +166,7 @@ export default function GameView() {
           <CardHeader>
             <CardTitle className="flex items-center justify-center gap-2 text-2xl text-muted-foreground">
               <BookOpen className="w-6 h-6" />
-              <span>Score of Contemplation</span>
+              <span>Điểm Suy Ngẫm</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -155,7 +179,7 @@ export default function GameView() {
         {isLoading && (
           <div className="mt-8 flex items-center gap-2 text-muted-foreground">
             <LoaderCircle className="animate-spin" />
-            <span>Awaiting cosmic wisdom...</span>
+            <span>Đang chờ đợi sự khôn ngoan của vũ trụ...</span>
           </div>
         )}
       </main>
@@ -165,12 +189,14 @@ export default function GameView() {
         question={question}
         timeLeft={timeLeft}
         onSubmit={handleSubmitAnswer}
-        onClose={() => handleReset("Dismissing a question is dismissing a part of yourself. The game resets.")}
+        onClose={() => handleReset("Bỏ qua một câu hỏi là bỏ qua một phần của chính mình. Trò chơi tái thiết lập.")}
       />
+      
+      <TutorialDialog isOpen={showTutorial} onClose={handleTutorialClose} />
 
       <footer className="absolute bottom-8 text-center text-sm text-muted-foreground px-4">
-        <p>A question appears every 10 minutes. Answer within 60 seconds or face a reset.</p>
-        <p>Built with Next.js & Genkit.</p>
+        <p>Một câu hỏi xuất hiện mỗi 10 phút. Trả lời trong 60 giây hoặc sẽ bị tái thiết lập.</p>
+        <p>Được xây dựng với Next.js & Genkit.</p>
       </footer>
     </div>
   );

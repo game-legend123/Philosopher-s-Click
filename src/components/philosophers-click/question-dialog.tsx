@@ -42,7 +42,7 @@ export default function QuestionDialog({ isOpen, question, timeLeft, onSubmit, o
     <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent className="max-w-xl">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-2xl font-headline text-primary">A Moment of Reflection</AlertDialogTitle>
+          <AlertDialogTitle className="text-2xl font-headline text-primary">Giây phút suy tư</AlertDialogTitle>
           <AlertDialogDescription className="text-lg text-foreground pt-4">
             {question}
           </AlertDialogDescription>
@@ -51,11 +51,11 @@ export default function QuestionDialog({ isOpen, question, timeLeft, onSubmit, o
           <div className="my-4">
             <Input
               type="text"
-              placeholder="Share your thoughts..."
+              placeholder="Chia sẻ suy nghĩ của bạn..."
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               className="text-base"
-              aria-label="Your answer"
+              aria-label="Câu trả lời của bạn"
               autoFocus
             />
           </div>
@@ -66,7 +66,7 @@ export default function QuestionDialog({ isOpen, question, timeLeft, onSubmit, o
             </div>
             <AlertDialogAction asChild>
                 <Button type="submit" className="w-full sm:w-auto bg-accent hover:bg-accent/90">
-                Submit Contemplation
+                Gửi câu trả lời
                 </Button>
             </AlertDialogAction>
           </AlertDialogFooter>
