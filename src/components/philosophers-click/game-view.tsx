@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import TutorialDialog from './tutorial-dialog';
 import { Button } from '@/components/ui/button';
 
-const QUESTION_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
+const QUESTION_INTERVAL_MS = 5 * 1000; // 5 seconds
 const RESPONSE_TIME_SECONDS = 60;
 const TUTORIAL_KEY = 'philosophers-click-tutorial-seen';
 
@@ -94,8 +94,6 @@ export default function GameView() {
 
   // Question interval
   useEffect(() => {
-    // For development: trigger question every 15 seconds
-    // const interval = 15 * 1000; 
     const interval = QUESTION_INTERVAL_MS;
 
     if (questionTimerRef.current) clearInterval(questionTimerRef.current);
@@ -195,7 +193,7 @@ export default function GameView() {
       <TutorialDialog isOpen={showTutorial} onClose={handleTutorialClose} />
 
       <footer className="absolute bottom-8 text-center text-sm text-muted-foreground px-4">
-        <p>Một câu hỏi xuất hiện mỗi 10 phút. Trả lời trong 60 giây hoặc sẽ bị tái thiết lập.</p>
+        <p>Một câu hỏi xuất hiện mỗi 5 giây. Trả lời trong 60 giây hoặc sẽ bị tái thiết lập.</p>
         <p>Được xây dựng với Next.js & Genkit.</p>
       </footer>
     </div>

@@ -29,7 +29,7 @@ export default function TutorialDialog({ isOpen, onClose }: TutorialDialogProps)
               </p>
               <ul className="list-disc list-inside space-y-2">
                 <li><strong>Tích lũy điểm:</strong> Điểm của bạn tự động tăng theo thời gian. Đây là thước đo cho sự tồn tại của bạn trong thế giới này.</li>
-                <li><strong>Đối mặt với câu hỏi:</strong> Cứ sau 10 phút, một câu hỏi triết học sẽ xuất hiện.</li>
+                <li><strong>Đối mặt với câu hỏi:</strong> Cứ sau 5 giây, một câu hỏi triết học sẽ xuất hiện.</li>
                 <li><strong>Trả lời hoặc bị tái thiết lập:</strong> Bạn có 60 giây để trả lời. Nếu không trả lời, trả lời trống, hoặc đóng hộp thoại, điểm của bạn sẽ bị reset về 0.</li>
               </ul>
               <p>
